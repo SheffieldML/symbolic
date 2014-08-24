@@ -3,6 +3,8 @@ import numpy as np
 import sympy as sym
 from sympy import Function, S, oo, I, cos, sin, asin, log, erf, pi, exp, sqrt, sign, gamma, polygamma
 from sympy.matrices import Matrix
+
+def stabilise
 ########################################
 ## Try to do some matrix functions: problem, you can't do derivatives
 ## with respect to matrix functions :-(
@@ -22,6 +24,8 @@ class selector(Function):
     def eval(cls, X, i, j):
         if i.is_Number and j.is_Number:
             return X[i, j]
+
+
         
 ##################################################    
 class logistic(Function):

@@ -4,7 +4,7 @@ import sympy as sym
 import numpy as np
 from GPy.likelihoods.likelihood import Likelihood
 from ..core.symbolic import Symbolic_core
-
+from GPy.likelihoods import link_functions
 
 class Symbolic(Likelihood, Symbolic_core):
     """
