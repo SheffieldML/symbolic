@@ -38,7 +38,7 @@ class Symbolic_core():
                           'logistic':GPy.util.functions.logistic,
                           'logisticln':GPy.util.functions.logisticln},
                          'numpy']
-
+        
         self._set_expressions(expressions)
         self._set_variables(cacheable)
         self._set_derivatives(derivatives)
@@ -126,7 +126,7 @@ class Symbolic_core():
                 if parameters.has_key(theta.name):
                     val = parameters[theta.name]
             # Add parameter.
-            
+            # TODO: if parameter is positive select constraint here (or whatever)
             self.link_parameter(Param(theta.name, val, None))
             #self._set_attribute(theta.name, )
 
@@ -140,7 +140,7 @@ class Symbolic_core():
         # for all provided keywords
 
         for var, code in self.variable_sort(self.code['parameters_changed']):
-            self._set_attribute(var, eval(code, self.namespace))
+            self._set_attribute(var, eval(code, self.namespace, self.__dict__))
 
         for var, value in kwargs.items():
             # update their cached values
@@ -164,7 +164,7 @@ class Symbolic_core():
                     for i, theta in enumerate(self.variables[var]):
                         self._set_attribute(theta.name, value[i])
         for var, code in self.variable_sort(self.code['update_cache']):
-            self._set_attribute(var, eval(code, self.namespace))
+            self._set_attribute(var, eval(code, self.namespace, self.__dict__))
 
     def eval_update_gradients(self, function, partial, **kwargs):
         # TODO: place checks for inf/nan in here?
@@ -278,9 +278,6 @@ class Symbolic_core():
                     self.expression_keys.append([fname, type])
                     self.expression_order.append(2) 
 
-        # This step may be unecessary.
-        # Not 100% sure if the sub expression elimination is order sensitive. This step orders the list with the 'function' code first and derivatives after.
-        self.expression_order, self.expression_list, self.expression_keys = zip(*sorted(zip(self.expression_order, self.expression_list, self.expression_keys)))
 
     def extract_sub_expressions(self, cache_prefix='cache', sub_prefix='sub', prefix='XoXoXoX'):
         # Do the common sub expression elimination.
@@ -363,10 +360,6 @@ class Symbolic_core():
         """Convert the given symbolic expression into code."""
         code = lambdastr(arg_list, expr)
         function_code = code.split(':')[1].strip()
-        # This needs a rewrite --- it doesn't check for match clashes! So sub11 would be replaced by sub1 before being replaced with sub11!!
-        for key in self.variables.keys():
-            for arg in self.variables[key]:
-                function_code = function_code.replace(arg.name, 'self.'+arg.name)
         #for arg in arg_list:
         #    function_code = function_code.replace(arg.name, 'self.'+arg.name)
 
@@ -374,6 +367,10 @@ class Symbolic_core():
 
     def _print_code(self, code):
         """Prepare code for string writing."""
+        # This needs a rewrite --- it doesn't check for match clashes! So sub11 would be replaced by sub1 before being replaced with sub11!!
+        for key in self.variables.keys():
+            for arg in self.variables[key]:
+                code = code.replace(arg.name, 'self.'+arg.name)
         return code
 
     def _display_expression(self, keys, user_substitutes={}):
