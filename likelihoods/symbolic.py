@@ -45,7 +45,6 @@ class Symbolic(Likelihood, Symbolic_core):
 
     def _set_derivatives(self, derivatives):
         # these are arguments for computing derivatives.
-        print "Whoop"
         Symbolic_core._set_derivatives(self, derivatives)
 
         # add second and third derivatives for Laplace approximation.

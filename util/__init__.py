@@ -1,1 +1,1 @@
-import symbolic
+from symbolic import *

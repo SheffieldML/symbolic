@@ -4,7 +4,7 @@
 
 import sympy as sym
 from sympy.utilities.lambdify import lambdify
-from GPy.util.symbolic import gammaln
+from ..util.symbolic import gammaln
 
 import numpy as np
 from GPy.likelihoods import link_functions
@@ -24,8 +24,8 @@ class SstudentT(Symbolic):
     .. See also::
         symbolic.py, for the parent class
     """
-    def __init__(self, gp_link=None, deg_free=5.0, t_scale2=1.0):
-        parameters = {'deg_free':5.0, 't_scale2':1.0}
+    def __init__(self, gp_link=None, nu=5.0, t_scale2=1.0):
+        parameters = {'nu':nu, 't_scale2':t_scale2}
         if gp_link is None:
             gp_link = link_functions.Identity()
 

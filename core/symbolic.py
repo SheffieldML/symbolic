@@ -127,7 +127,7 @@ class Symbolic_core():
                     val = parameters[theta.name]
             # Add parameter.
             
-            self.add_parameters(Param(theta.name, val, None))
+            self.link_parameter(Param(theta.name, val, None))
             #self._set_attribute(theta.name, )
 
     def eval_parameters_changed(self):
@@ -363,6 +363,10 @@ class Symbolic_core():
         """Convert the given symbolic expression into code."""
         code = lambdastr(arg_list, expr)
         function_code = code.split(':')[1].strip()
+        # This needs a rewrite --- it doesn't check for match clashes! So sub11 would be replaced by sub1 before being replaced with sub11!!
+        for key in self.variables.keys():
+            for arg in self.variables[key]:
+                function_code = function_code.replace(arg.name, 'self.'+arg.name)
         #for arg in arg_list:
         #    function_code = function_code.replace(arg.name, 'self.'+arg.name)
 
@@ -370,10 +374,6 @@ class Symbolic_core():
 
     def _print_code(self, code):
         """Prepare code for string writing."""
-        # This needs a rewrite --- it doesn't check for match clashes! So sub11 would be replaced by sub1 before being replaced with sub11!!
-        for key in self.variables.keys():
-            for arg in self.variables[key]:
-                code = code.replace(arg.name, 'self.'+arg.name)
         return code
 
     def _display_expression(self, keys, user_substitutes={}):
