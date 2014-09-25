@@ -278,6 +278,9 @@ class Symbolic_core():
                     self.expression_keys.append([fname, type])
                     self.expression_order.append(2) 
 
+        # Not 100% sure if the sub expression elimination is order sensitive. This step orders the list with the 'function' code first and derivatives after.
+        self.expression_order, self.expression_list, self.expression_keys = zip(*sorted(zip(self.expression_order, self.expression_list, self.expression_keys)))
+
 
     def extract_sub_expressions(self, cache_prefix='cache', sub_prefix='sub', prefix='XoXoXoX'):
         # Do the common sub expression elimination.
