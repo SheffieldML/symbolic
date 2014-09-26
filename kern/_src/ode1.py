@@ -16,11 +16,12 @@ class Ode1(Symbolic):
         #for LFM first and second order input dimension is 1
         x = sym.symbols('x')
         z = sym.symbols('z')
-        decay = sym.var('decay_i decay_j', positive=True)
+        decay_i, decay_j = sym.var('decay_i decay_j', positive=True)
         Si = sym.var('S_i:' + str(rank)) #Sensitivities for output i
         Sj = sym.var('S_j:' + str(rank)) #Sensititvities for ouput j
         shared_lengthscale = sym.var('shared_lengthscale_:' + str(rank), positive=True)
-        tmp = sym.var('tmp') #temp variable that allows interchange between lengthscales
+        tmp = sym.var('tmp') #temp variable that allows interchange between length scale
+        decay_t = sym.var('decay_t')
         #code to define h functions
         h_0 = sym.exp((tmp*decay_j)**2/4.)*sym.exp(-decay_j*z)*(sym.exp(decay_j*x)*
               (sym.erf((z-x)/tmp - tmp*decay_j/2) + sym.erf(x/tmp + tmp*decay_j/2))
@@ -33,11 +34,11 @@ class Ode1(Symbolic):
             #Selection of lengthscale regarding to k        
             ls = parse_expr('shared_lengthscale_' + str(q))
             #Product of sensitivities            
-            Sprod = parse_expr('S_i' + str(k))*parse_expr('S_j' + str(q))
+            Sprod = parse_expr('S_i' + str(q))*parse_expr('S_j' + str(q))
             #Symbolic h calculation            
             h0_new = h_0.subs({tmp: ls})
-            h1_new = h_0.subs({tmp: ls, B: B2, Bp: B})
-            h1_new = h1_new.subs({B2: Bp})
+            h1_new = h0_new.subs({ decay_i: decay_t, decay_j: decay_i})
+            h1_new = h1_new.subs({decay_t: decay_j})
 
             dist = h0_new + h1_new
             # this is the covariance function    
