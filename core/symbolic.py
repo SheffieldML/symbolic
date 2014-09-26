@@ -185,7 +185,7 @@ class Symbolic_core():
 
     def eval_function(self, function, **kwargs):
         self.eval_update_cache(**kwargs)
-        return eval(self.code[function]['function'], self.namespace)
+        return eval(self.code[function]['function'], self.namespace, self.__dict__)
 
     def code_parameters_changed(self):
         # do all the precomputation codes.

@@ -31,6 +31,7 @@ class Ode1(Symbolic):
         #Initialization of kernel value
         kff = 0
         for q in range(rank): #for each latent function
+            B, B2, Bp = sym.symbols('B, B2, Bp')
             #Selection of lengthscale regarding to k        
             ls = parse_expr('shared_lengthscale_' + str(q))
             #Product of sensitivities            

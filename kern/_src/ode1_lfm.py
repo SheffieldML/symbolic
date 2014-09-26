@@ -1,7 +1,7 @@
 import numpy as np
 import sympy as sym
 from GPy.util.symbolic import differfln
-from sympy import Function, Matrix, Piecewise, And, Or, Eq
+from sympy import Function, ImmutableMatrix, Piecewise, And, Or, Eq
 
 from symbolic import Symbolic
 
@@ -15,8 +15,8 @@ class Ode1_lfm(Symbolic):
 
         x_1, z_1 = sym.symbols('x_1, z_1', positive=True)
 
-#       does not work yet, because of bug in sympy.cse
-#        k = Sel(Matrix([[k_ff, k_fx], [k_fx, k_xx]]), x_1, z_1)
+#       does not work yet, because of a bug in sympy.cse
+#        k = Sel(ImmutableMatrix([[k_ff, k_fx], [k_fx, k_xx]]), x_1, z_1)
         
         k = Piecewise(
                 (k_xx, And(Eq(x_1,1), Eq(z_1,1))),
