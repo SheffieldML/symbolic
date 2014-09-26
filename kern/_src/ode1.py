@@ -30,10 +30,11 @@ class Ode1(Symbolic):
         #Initialization of kernel value
         kff = 0
         for q in range(rank): #for each latent function
+            B, B2, Bp = sym.symbols('B, B2, Bp')
             #Selection of lengthscale regarding to k        
             ls = parse_expr('shared_lengthscale_' + str(q))
             #Product of sensitivities            
-            Sprod = parse_expr('S_i' + str(k))*parse_expr('S_j' + str(q))
+            Sprod = parse_expr('S_i' + str(q))*parse_expr('S_j' + str(q))
             #Symbolic h calculation            
             h0_new = h_0.subs({tmp: ls})
             h1_new = h_0.subs({tmp: ls, B: B2, Bp: B})
