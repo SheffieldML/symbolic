@@ -13,6 +13,9 @@ import scipy
 import GPy
 #from scipy.special import gammaln, gamma, erf, erfc, erfcx, polygamma
 from GPy.util.symbolic import normcdf, normcdfln, logistic, logisticln, erfcx, erfc, gammaln
+
+from ..util.printer import VectorizedPrinter
+
 def getFromDict(dataDict, mapList):
     return reduce(lambda d, k: d[k], mapList, dataDict)
 
@@ -362,7 +365,7 @@ class Symbolic_core():
  
     def _expr2code(self, arg_list, expr):
         """Convert the given symbolic expression into code."""
-        code = lambdastr(arg_list, expr)
+        code = lambdastr(arg_list, expr, printer=VectorizedPrinter)
         function_code = code.split(':')[1].strip()
         #for arg in arg_list:
         #    function_code = function_code.replace(arg.name, 'self.'+arg.name)
