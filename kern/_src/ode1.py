@@ -6,6 +6,7 @@ except ImportError:
 
 import numpy as np
 from symbolic import Symbolic
+from sympy.parsing.sympy_parser import parse_expr
 
 class Ode1(Symbolic):
     """
@@ -27,11 +28,10 @@ class Ode1(Symbolic):
               (sym.erf((z-x)/tmp - tmp*decay_j/2) + sym.erf(x/tmp + tmp*decay_j/2))
               - sym.exp(-decay_i*x)*(sym.erf(z/tmp - tmp*decay_j/2) + sym.erf(tmp*decay_j/2)))
               
-        from sympy.parsing.sympy_parser import parse_expr
+        
         #Initialization of kernel value
         kff = 0
         for q in range(rank): #for each latent function
-            B, B2, Bp = sym.symbols('B, B2, Bp')
             #Selection of lengthscale regarding to k        
             ls = parse_expr('shared_lengthscale_' + str(q))
             #Product of sensitivities            
