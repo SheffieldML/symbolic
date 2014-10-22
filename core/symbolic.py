@@ -13,6 +13,9 @@ import scipy
 import GPy
 #from scipy.special import gammaln, gamma, erf, erfc, erfcx, polygamma
 from GPy.util.symbolic import normcdf, normcdfln, logistic, logisticln, erfcx, erfc, gammaln
+
+from ..util.printer import VectorizedPrinter
+
 def getFromDict(dataDict, mapList):
     return reduce(lambda d, k: d[k], mapList, dataDict)
 
@@ -63,7 +66,6 @@ class Symbolic_core():
         for m in namespaces[::-1]:
             buf = _get_namespace(m)
             self.namespace.update(buf)
-        self.namespace.update(self.__dict__)
 
     def _set_expressions(self, expressions):
         """Extract expressions and variables from the user provided expressions."""
@@ -279,7 +281,9 @@ class Symbolic_core():
                     self.expression_order.append(2) 
 
         # Not 100% sure if the sub expression elimination is order sensitive. This step orders the list with the 'function' code first and derivatives after.
-        self.expression_order, self.expression_list, self.expression_keys = zip(*sorted(zip(self.expression_order, self.expression_list, self.expression_keys)))
+        self.expression_order, self.expression_list, self.expression_keys = zip(*sorted(zip(self.expression_order,
+                                                                                            self.expression_list,
+                                                                                            self.expression_keys),key=sym.default_sort_key))
 
 
     def extract_sub_expressions(self, cache_prefix='cache', sub_prefix='sub', prefix='XoXoXoX'):
@@ -361,7 +365,7 @@ class Symbolic_core():
  
     def _expr2code(self, arg_list, expr):
         """Convert the given symbolic expression into code."""
-        code = lambdastr(arg_list, expr)
+        code = lambdastr(arg_list, expr, printer=VectorizedPrinter)
         function_code = code.split(':')[1].strip()
         #for arg in arg_list:
         #    function_code = function_code.replace(arg.name, 'self.'+arg.name)

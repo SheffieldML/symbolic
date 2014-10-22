@@ -25,6 +25,17 @@ from sympy.matrices import Matrix
 #         if i.is_Number and j.is_Number:
 #             return X[i, j]
 
+class Sel(Function):
+    """A function that returns an element of a Matrix depending on input indices."""
+    nargs = 3
+    @classmethod
+    def eval(cls, X, i, j):
+        if i.is_Number and j.is_Number:
+            return X[i, j]
+
+    def _eval_derivative(self, x):
+        return Sel(self.args[0].diff(x), self.args[1], self.args[2]) #TODO throw error if x in args[1:]
+
 def create_selector(func_list, index, default=None):
     """A function that returns a piecewise function which selects the relevant element of an element of a Matrix depending on input indices."""
     piecewise_pairs = []
