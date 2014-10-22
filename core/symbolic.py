@@ -172,7 +172,7 @@ class Symbolic_core():
         gradient = {}
         for theta in self.variables['theta']:
             code = self.code[function]['derivative'][theta.name]
-            gradient[theta.name] = (partial*eval(code, self.namespace)).sum()
+            gradient[theta.name] = (partial*eval(code, self.namespace, self.__dict__)).sum()
         return gradient
         
     def eval_gradients_X(self, function, partial, **kwargs):
@@ -181,12 +181,12 @@ class Symbolic_core():
         self.eval_update_cache(**kwargs)
         for i, theta in enumerate(self.variables['X']):
             code = self.code[function]['derivative'][theta.name]
-            gradients_X[:, i:i+1] = partial*eval(code, self.namespace)
+            gradients_X[:, i:i+1] = partial*eval(code, self.namespace, self.__dict__)
         return gradients_X
 
     def eval_function(self, function, **kwargs):
         self.eval_update_cache(**kwargs)
-        return eval(self.code[function]['function'], self.namespace)
+        return eval(self.code[function]['function'], self.namespace, self.__dict__)
 
     def code_parameters_changed(self):
         # do all the precomputation codes.
