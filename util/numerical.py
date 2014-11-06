@@ -1,9 +1,9 @@
 
-from numpy import *
+import numpy as np
 
 def piecewise(*pairs):
     expressions, conditions = zip(*pairs)
-    bc = broadcast(*conditions)
-    first_true = empty(bc.shape, dtype=int)
-    first_true.flat = [argmax(conds) for conds in bc]
-    return choose(first_true, expressions)
+    bc = np.broadcast(*conditions)
+    first_true = np.empty(bc.shape, dtype=int)
+    first_true.flat = [np.argmax(conds) for conds in bc]
+    return np.choose(first_true, expressions)
