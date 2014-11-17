@@ -22,6 +22,7 @@ class Symbolic(Likelihood, Symbolic_core):
             raise ValueError, "You must provide an argument for the log pdf."
 
         Likelihood.__init__(self, gp_link, name=name)
+        
         functions = {'log_pdf':log_pdf}
         self.cacheable = ['F', 'Y']
 
@@ -167,12 +168,12 @@ class Symbolic(Likelihood, Symbolic_core):
         self.eval_update_cache(F=f, Y=y, Y_metadata=Y_metadata)
         if self.missing_data:
             return np.where(np.isnan(y), 
-                            eval(self.code['missing_log_pdf']['derivative']['f_0'], self.namespace), 
-                            eval(self.code['log_pdf']['derivative']['f_0'], self.namespace)) 
+                            eval(self.code['missing_log_pdf']['derivative']['f_0'], self.namespace, self.__dict__), 
+                            eval(self.code['log_pdf']['derivative']['f_0'], self.namespace, self.__dict__))
         else:
             return np.where(np.isnan(y), 
                             0., 
-                            eval(self.code['log_pdf']['derivative']['f_0'], self.namespace))
+                            eval(self.code['log_pdf']['derivative']['f_0'], self.namespace, self.__dict__))
 
     def d2logpdf_dlink2(self, f, y, Y_metadata=None):
         """
@@ -198,24 +199,24 @@ class Symbolic(Likelihood, Symbolic_core):
         self.eval_update_cache(F=f, Y=y, Y_metadata=Y_metadata)
         if self.missing_data:
             return np.where(np.isnan(y), 
-                            eval(self.code['missing_log_pdf']['second_derivative']['f_0'], self.namespace), 
-                            eval(self.code['log_pdf']['second_derivative']['f_0'], self.namespace)) 
+                            eval(self.code['missing_log_pdf']['second_derivative']['f_0'], self.namespace, self.__dict__), 
+                            eval(self.code['log_pdf']['second_derivative']['f_0'], self.namespace, self.__dict__)) 
         else:
             return np.where(np.isnan(y), 
                             0., 
-                            eval(self.code['log_pdf']['second_derivative']['f_0'], self.namespace))
+                            eval(self.code['log_pdf']['second_derivative']['f_0'], self.namespace, self.__dict__))
 
     def d3logpdf_dlink3(self, f, y, Y_metadata=None):
         assert np.atleast_1d(f).shape == np.atleast_1d(y).shape 
         self.eval_update_cache(F=f, Y=y, Y_metadata=Y_metadata)
         if self.missing_data:
             return np.where(np.isnan(y), 
-                            eval(self.code['missing_log_pdf']['third_derivative']['f_0'], self.namespace), 
-                            eval(self.code['log_pdf']['third_derivative']['f_0'], self.namespace))
+                            eval(self.code['missing_log_pdf']['third_derivative']['f_0'], self.namespace, self.__dict__), 
+                            eval(self.code['log_pdf']['third_derivative']['f_0'], self.namespace, self.__dict__))
         else:
             return np.where(np.isnan(y), 
                             0., 
-                            eval(self.code['log_pdf']['third_derivative']['f_0'], self.namespace))
+                            eval(self.code['log_pdf']['third_derivative']['f_0'], self.namespace, self.__dict__))
 
     def dlogpdf_link_dtheta(self, f, y, Y_metadata=None):
         assert np.atleast_1d(f).shape == np.atleast_1d(y).shape 
@@ -224,12 +225,12 @@ class Symbolic(Likelihood, Symbolic_core):
         for i, theta in enumerate(self.variables['theta']):
             if self.missing_data:
                 g[:, i:i+1] = np.where(np.isnan(y), 
-                                       eval(self.code['missing_log_pdf']['derivative'][theta.name], self.namespace), 
-                                       eval(self.code['log_pdf']['derivative'][theta.name], self.namespace))
+                                       eval(self.code['missing_log_pdf']['derivative'][theta.name], self.namespace, self.__dict__), 
+                                       eval(self.code['log_pdf']['derivative'][theta.name], self.namespace, self.__dict__))
             else:
                 g[:, i:i+1] = np.where(np.isnan(y), 
                                        0., 
-                                       eval(self.code['log_pdf']['derivative'][theta.name], self.namespace))
+                                       eval(self.code['log_pdf']['derivative'][theta.name], self.namespace, self.__dict__))
         return g.sum(0)
 
     def dlogpdf_dlink_dtheta(self, f, y, Y_metadata=None):
@@ -239,12 +240,12 @@ class Symbolic(Likelihood, Symbolic_core):
         for i, theta in enumerate(self.variables['theta']):
             if self.missing_data:
                 g[:, i:i+1] = np.where(np.isnan(y), 
-                                       eval(self.code['missing_log_pdf']['second_derivative'][theta.name], self.namespace), 
-                                       eval(self.code['log_pdf']['second_derivative'][theta.name], self.namespace))
+                                       eval(self.code['missing_log_pdf']['second_derivative'][theta.name], self.namespace, self.__dict__), 
+                                       eval(self.code['log_pdf']['second_derivative'][theta.name], self.namespace, self.__dict__))
             else:
                 g[:, i:i+1] = np.where(np.isnan(y), 
                                        0., 
-                                       eval(self.code['log_pdf']['second_derivative'][theta.name], self.namespace))
+                                       eval(self.code['log_pdf']['second_derivative'][theta.name], self.namespace, self.__dict__))
         return g
 
     def d2logpdf_dlink2_dtheta(self, f, y, Y_metadata=None):
@@ -254,12 +255,12 @@ class Symbolic(Likelihood, Symbolic_core):
         for i, theta in enumerate(self.variables['theta']):
             if self.missing_data:
                 g[:, i:i+1] = np.where(np.isnan(y), 
-                                       eval(self.code['missing_log_pdf']['third_derivative'][theta.name], self.namespace), 
-                                       eval(self.code['log_pdf']['third_derivative'][theta.name], self.namespace))
+                                       eval(self.code['missing_log_pdf']['third_derivative'][theta.name], self.namespace, self.__dict__), 
+                                       eval(self.code['log_pdf']['third_derivative'][theta.name], self.namespace, self.__dict__))
             else:
                 g[:, i:i+1] = np.where(np.isnan(y), 
                                        0., 
-                                       eval(self.code['log_pdf']['third_derivative'][theta.name], self.namespace))
+                                       eval(self.code['log_pdf']['third_derivative'][theta.name], self.namespace, self.__dict__))
         return g
 
     def predictive_mean(self, mu, sigma, Y_metadata=None):
