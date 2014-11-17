@@ -15,6 +15,7 @@ import GPy
 from GPy.util.symbolic import normcdf, normcdfln, logistic, logisticln, erfcx, erfc, gammaln
 
 from ..util.printer import VectorizedPrinter
+from ..util.numerical import piecewise
 
 def getFromDict(dataDict, mapList):
     return reduce(lambda d, k: d[k], mapList, dataDict)
@@ -39,7 +40,8 @@ class Symbolic_core():
                           'normcdf':GPy.util.functions.normcdf,
                           'normcdfln':GPy.util.functions.normcdfln,
                           'logistic':GPy.util.functions.logistic,
-                          'logisticln':GPy.util.functions.logisticln},
+                          'logisticln':GPy.util.functions.logisticln,
+                           'Piecewise':piecewise},
                          'numpy']
         
         self._set_expressions(expressions)

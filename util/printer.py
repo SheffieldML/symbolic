@@ -1,27 +1,15 @@
 from sympy.printing.lambdarepr import LambdaPrinter
+from sympy.printing.str import StrPrinter
+from sympy.printing.precedence import precedence
 from sympy.utilities import default_sort_key
 
-class VectorizedPrinter(LambdaPrinter):
+class VectorizedPrinter(StrPrinter):
 
-
-#TODO!
-#    def _print_Piecewise(self, expr):
-#        from sympy.sets.sets import Interval
-#        result = []
-#        i = 0
-#        for arg in expr.args:
-#            e = arg.expr
-#            c = arg.cond
-#            result.append('((')
-#            result.append(self._print(e))
-#            result.append(') if (')
-#            result.append(self._print(c))
-#            result.append(') else (')
-#            i += 1
-#        result = result[:-1]
-#        result.append(') else None)')
-#        result.append(')'*(2*i - 2))
-#        return ''.join(result)
+    def _print_Piecewise(self, expr):
+        result = [expr.func.__name__, '(']
+        result.append( ','.join([ '(%s,%s)' % (self._print(e), self._print(c)) for e,c in expr.args]) )
+        result.append(')')
+        return ''.join(result)
 
     def _print_And(self, expr):
         result = ['(']
@@ -44,4 +32,11 @@ class VectorizedPrinter(LambdaPrinter):
     def _print_Not(self, expr):
         result = ['(', '~ (', self._print(expr.args[0]), '))']
         return ''.join(result)
+
+
+    def _print_BooleanTrue(self, expr):
+        return "True"
+
+    def _print_BooleanFalse(self, expr):
+        return "False"
 

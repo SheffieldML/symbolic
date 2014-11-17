@@ -344,36 +344,25 @@ class h(Function):
     
     @classmethod
     def eval(cls, t, tprime, d_i, d_j, l):
-        if (t.is_Number
-            and tprime.is_Number
-            and d_i.is_Number
-            and d_j.is_Number
-            and l.is_Number):
-            if (t is S.NaN
-                or tprime is S.NaN
-                or d_i is S.NaN
-                or d_j is S.NaN
-                or l is S.NaN):
-                return S.NaN
-            else:
-                half_l_di = 0.5*l*d_i
-                arg_1 = half_l_di + tprime/l
-                arg_2 = half_l_di - (t-tprime)/l
-                ln_part_1 = ln_diff_erf(arg_1, arg_2)
-                arg_1 = half_l_di 
-                arg_2 = half_l_di - t/l
-                sign_val = sign(t/l)
-                ln_part_2 = ln_diff_erf(half_l_di, half_l_di - t/l)
 
-                
-                return (sign_val*exp(half_l_di*half_l_di
-                                        - d_i*(t-tprime)
-                                        + ln_part_1
-                                        - log(d_i + d_j))
-                        - sign_val*exp(half_l_di*half_l_di
-                                          - d_i*t - d_j*tprime
-                                          + ln_part_2
-                                          - log(d_i + d_j)))
+        half_l_di = 0.5*l*d_i
+        arg_1 = half_l_di + tprime/l
+        arg_2 = half_l_di - (t-tprime)/l
+        ln_part_1 = differfln(arg_1, arg_2)
+        arg_1 = half_l_di 
+        arg_2 = half_l_di - t/l
+        sign_val = sign(t/l)
+        ln_part_2 = differfln(half_l_di, half_l_di - t/l)
+
+        
+        return (sign_val*exp(half_l_di*half_l_di
+                                - d_i*(t-tprime)
+                                + ln_part_1
+                                - log(d_i + d_j))
+                - sign_val*exp(half_l_di*half_l_di
+                                  - d_i*t - d_j*tprime
+                                  + ln_part_2
+                                  - log(d_i + d_j)))
             
                                   
                 # return (exp((d_j/2.*l)**2)/(d_i+d_j)
