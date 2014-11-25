@@ -8,7 +8,7 @@ from ...core.symbolic import Symbolic_core
 class Symbolic(Kern, Symbolic_core):
     """
     """
-    def __init__(self, input_dim, k=None, output_dim=1, name='symbolic', parameters=None, active_dims=None, operators=None, func_modules=[]):
+    def __init__(self, input_dim, k=None, output_dim=1, name='symbolic', parameters=None, active_dims=None, operators=None, func_modules=[], cse=True):
 
         if k is None:
             raise ValueError, "You must provide an argument for the covariance function."
@@ -16,7 +16,7 @@ class Symbolic(Kern, Symbolic_core):
         Kern.__init__(self, input_dim, active_dims, name=name)
         kdiag = k
         self.cacheable = ['X', 'Z']
-        Symbolic_core.__init__(self, {'k':k,'kdiag':kdiag}, cacheable=self.cacheable, derivatives = ['X', 'theta'], parameters=parameters, func_modules=func_modules)        
+        Symbolic_core.__init__(self, {'k':k,'kdiag':kdiag}, cacheable=self.cacheable, derivatives = ['X', 'theta'], parameters=parameters, func_modules=func_modules, cse=cse)        
         self.output_dim = output_dim
 
     def __add__(self,other):

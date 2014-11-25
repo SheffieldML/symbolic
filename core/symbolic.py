@@ -28,7 +28,7 @@ class Symbolic_core():
     Base model symbolic class.
     """
 
-    def __init__(self, expressions, cacheable, derivatives=None, parameters=None, func_modules=[]):
+    def __init__(self, expressions, cacheable, derivatives=None, parameters=None, func_modules=[], cse=True):
         # Base class init, do some basic derivatives etc.
 
         # Func_modules sets up the right mapping for functions.
@@ -58,7 +58,11 @@ class Symbolic_core():
         # Helper functions to get data in and out of dictionaries.
         # this code from http://stackoverflow.com/questions/14692690/access-python-nested-dictionary-items-via-a-list-of-keys
 
-        self.extract_sub_expressions()
+        if cse:
+            self.extract_sub_expressions()
+        else:
+            self.expressions['parameters_changed'] = {}
+            self.expressions['update_cache'] = {}
         self._gen_code()
         self._set_namespace(func_modules)
 
