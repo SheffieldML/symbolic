@@ -95,7 +95,7 @@ class Symbolic_core():
         # and Z, for likelihoods F and for mapping functions X.
         self.cacheable_vars = [] # list of everything that's cacheable
         for var in cacheable:            
-            self.variables[var] = [e for e in vars if e.name.split('_')[0]==var.lower()]
+            self.variables[var] = sorted([e for e in vars if e.name.split('_')[0]==var.lower()], key=lambda e:e.name.split('_')[1])
             self.cacheable_vars += self.variables[var]
         for var in cacheable:
             if not self.variables[var]:
