@@ -17,21 +17,20 @@ class Ode1_eq_lfm(Ode1_lfm):
 
         input_dim = 2
 
-        x_0, x_1, x_2, z_0, z_1, z_2, decay, variance, lengthscale = sym.symbols('x_:3, z_:3, decay, variance, lengthscale', positive=True)
-#        x_1, x_2, z_1, z_2, decay, variance, lengthscale = sym.symbols('x_1:3, z_1:3, decay, variance, lengthscale', positive=True)
+        x_0, z_0, decay, variance, lengthscale = sym.symbols('x_0, z_0, decay, variance, lengthscale', positive=True)
         scale = sym.symbols('scale')
         
-        k_uu = variance*sym.exp( -(x_1-z_1)**2/lengthscale**2 )
+        k_uu = variance*sym.exp( -(x_0-z_0)**2/lengthscale**2 )
         k_fu = ( sym.sqrt(sym.pi)*lengthscale*scale/2 *
                  sym.exp((decay*lengthscale/2)**2
-                         -decay*(z_1-x_1) +
-                         +differfln( (z_1-x_1)/lengthscale - decay*lengthscale/2,
-                                         -x_1 /lengthscale - decay*lengthscale/2
+                         -decay*(z_0-x_0) +
+                         +differfln( (z_0-x_0)/lengthscale - decay*lengthscale/2,
+                                         -x_0 /lengthscale - decay*lengthscale/2
                                    )
                          )
                )
-        k_ff = scale**2*(    h(x_1, z_1, decay, decay, lengthscale)
-                           + h(z_1, x_1, decay, decay, lengthscale)
+        k_ff = scale**2*(    h(x_0, z_0, decay, decay, lengthscale)
+                           + h(z_0, x_0, decay, decay, lengthscale)
                         )
 
 
