@@ -14,7 +14,7 @@ class Ode1_lfm(Symbolic):
 
     def __init__(self, k_uu, k_fu, k_ff, output_dim=1, parameters=None, name='Ode1_lfm', func_modules=[],cse=True):
 
-        x_1, z_1 = sym.symbols('x_0, z_0', positive=True)
+        x_1, z_1 = sym.symbols('x_1, z_1', positive=True)
 
 #       does not work yet, because of a bug in sympy.cse
 #        k = Sel(ImmutableMatrix([[k_ff, k_fx], [k_fx, k_xx]]), x_2, z_1)
