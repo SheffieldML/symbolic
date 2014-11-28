@@ -11,9 +11,9 @@ class Ode1_eq_lfm(Ode1_lfm):
     A symbolic covariance based on a first order differential equation being driven by a latent force that is an exponentiated quadratic. 
 
     """
-    def __init__(self, output_dim=1, decay=1, variance=1, lengthscale=1, name='Ode1_eq_lfm', cse=True):
+    def __init__(self, output_dim=1, decay=1, variance=1, lengthscale=1, scale=1, name='Ode1_eq_lfm', cse=True):
 
-        parameters = {'decay' : decay, 'variance' : variance, 'lengthscale' : lengthscale}
+        parameters = {'decay' : decay, 'variance' : variance, 'lengthscale' : lengthscale, 'scale': scale}
 
         input_dim = 2
 
