@@ -20,13 +20,13 @@ class Ode1_lfm(Symbolic):
 #        k = Sel(ImmutableMatrix([[k_ff, k_fx], [k_fx, k_xx]]), x_2, z_1)
         
         if k_fu is None:
-            decay = sym.symbols('decay', positive=True)
+            x_0, z_0, decay = sym.symbols('x_0, z_0, decay', positive=True)
             scale = sym.symbols('scale')
-            k_fu = scale*exp(-decay*x_0)*sym.integrate(exp(decay*x_0) * k_uu, (x_0, 0, x_0))
+            k_fu = scale*sym.exp(-decay*x_0)*sym.integrate(sym.exp(decay*x_0) * k_uu, (x_0, 0, x_0))
         if k_ff is None:
-            decay = sym.symbols('decay', positive=True)
+            x_0, z_0, decay = sym.symbols('x_0, z_0, decay', positive=True)
             scale = sym.symbols('scale')
-            k_fu = scale**2*exp(-D*(x_0+z_0))*sym.integrate(exp(decay*(x_0+y_0)) * k_uu, (x_0, 0, x_0), (z_0, 0, z_0))
+            k_fu = scale**2*sym.exp(-D*(x_0+z_0))*sym.integrate(sym.exp(decay*(x_0+y_0)) * k_uu, (x_0, 0, x_0), (z_0, 0, z_0))
 
         k = Piecewise(
                 (k_ff, And(Eq(x_1,1), Eq(z_1,1))),
