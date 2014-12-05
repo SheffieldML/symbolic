@@ -21,17 +21,17 @@ class Ode1_eq_lfm(Ode1_lfm):
         scale = sym.symbols('scale')
         
         k_uu = variance*sym.exp( -(x_0-z_0)**2/lengthscale**2 )
-        k_fu = ( sym.sqrt(sym.pi)*lengthscale*scale/2 *
+        k_fu = variance*( sym.sqrt(sym.pi)*lengthscale*scale/2 *
                  sym.exp((decay*lengthscale/2)**2
-                         -decay*(z_0-x_0) +
-                         +differfln( (z_0-x_0)/lengthscale - decay*lengthscale/2,
-                                         -x_0 /lengthscale - decay*lengthscale/2
+                         +decay*(z_0-x_0) +
+                         +differfln( (x_0-z_0)/lengthscale - decay*lengthscale/2,
+                                         -z_0 /lengthscale - decay*lengthscale/2
                                    )
                          )
                )
-        k_ff = scale**2*(    h(x_0, z_0, decay, decay, lengthscale)
-                           + h(z_0, x_0, decay, decay, lengthscale)
-                        )
+        k_ff = variance*scale**2*sqrt(pi)*lengthscale / 2 * (   h(x_0, z_0, decay, decay, lengthscale)
+                                                                    + h(z_0, x_0, decay, decay, lengthscale)
+                                                                  )
 
 
         super(Ode1_eq_lfm, self).__init__(k_uu, k_fu, k_ff, output_dim=output_dim, parameters=parameters, name=name, func_modules=[{'differfln':GPy.util.functions.differfln}], cse=cse)
